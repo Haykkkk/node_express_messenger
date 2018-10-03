@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat</title>
+</head>
+<style>
+    .outer{
+        width: 900px;
+        margin: auto;
+    }
+    .room{
+        width: 400px;
+        margin: 5px;
+        float: left;
+
+    }
+    .messages{
+        width: 390px;
+        margin:5px;
+        height: 300px;
+        border: 2px solid gray ;
+        border-radius: 5px;
+
+    }
+    .txt-send{
+        width: 300px;
+        margin:5px;
+    }
+    h1{
+      color: purple;
+    }
+    .btn{
+      width: 200px;
+      background: silver;
+      height: 100px;
+      border-radius: 5px;
+      border: none;
+    }
+
+</style>
+<body>
+    <div class="outer">
+        <div class="room">
+            <h1>Node messenger</h1>
+            <div class="messages" id="nMessages"></div>
+            <form style="display:flex">
+                <textarea name="name" rows="8" cols="50" id="nTxt" class="txt-send"></textarea>
+                <input type="button" value="Send" id="nBtn" class="btn">
+            </form>
+        </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io();
+        socket.on("connect", () =>{
+            let nRoom = "nRoom";
+            socket.emit('nRoom', nRoom);
+
+        });
+
+        let nBtn = document.getElementById("nBtn");
+        let nTxt = document.getElementById("nTxt");
+        let nMessages = document.getElementById("nMessages");
+
+        nBtn.addEventListener("click", function(){
+            socket.emit("node new message", nTxt.value);
+        });
+        socket.on("node news", function(data){
+            nMessages.innerHTML = nMessages.innerHTML + "<br>" + data;
+        });
+        socket.on("node new user", function(data){
+            nMessages.innerHTML = nMessages.innerHTML + "<br>" + data;
+        });
+
+    </script>
+</body>
+</html>
